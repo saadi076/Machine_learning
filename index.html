@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Classification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: rgb(56, 56, 186);
+            color: aquamarine;
+            position: absolute;
+            margin: 30px;
+            padding: 20px;
+            font-size: medium;
+            font-style: italic;
+        }
+
+        #result {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+        button{
+            background-color: aqua;
+            padding: 2px;
+            margin: 30px;
+            font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Dog vs Cat Classifier</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" id="imageInput" name="file" accept="image/*" required>
+        <button type="submit">Upload & Predict</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const formData = new FormData();
+            const fileInput = document.getElementById('imageInput');
+            formData.append('file', fileInput.files[0]);
+
+            
+            const response = await fetch('http://localhost:5000/predict', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            document.getElementById('result').innerText = 'Prediction: ' + result.prediction;
+        });
+    </script>
+</body>
+
+</html>
