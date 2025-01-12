@@ -6,17 +6,18 @@ print(df.head(10))
 df.fillna(df.mean(), inplace=True)
 print(df.isnull().sum())
 from sklearn.linear_model import LinearRegression
+from sklearn.tree import DecisionTreeRegressor
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 X = df.drop('diagonal', axis=1)
-y = df
+y = df['diagonal']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 sc = StandardScaler()
 X_train = sc.fit_transform(X_train)
 X_test = sc.transform(X_test)
 
-sv = LinearRegression()
+sv = DecisionTreeRegressor()
 
 sv.fit(X_train, y_train)
 y_pred = sv.predict(X_test)
@@ -32,13 +33,10 @@ def predict_diagonal(input_features):
     predicted_value = sv.predict(input_scaled)
     return predicted_value
 
-new_data = [1, 104.48, 103.50, 4.40, 2.94, 113.16]  
+new_data = [1, 105.45, 112.73, 3.72, 3.87, 112.16]  
 predicted_diagonal = predict_diagonal(new_data)
 print(f"Predicted Diagonal: {predicted_diagonal}")
 actual = [172.69]
-a1 = r2_score(actual, predicted_diagonal) 
+a1 = r2_score(actual, [predicted_diagonal]) 
 print(f"Accuracy of predicted is {a1}")
-from joblib import dump, load
 
-dump(model, 'model.joblib')
-loaded_model = load('model.joblib')
